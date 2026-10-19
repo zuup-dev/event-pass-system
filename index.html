@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OptimusPass // Next-Gen Event Protocol</title>
+  
+  <!-- Inter Font & Bootstrap CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(17, 24, 39, 0.7);
+      --accent-cyan: #06b6d4;
+      --accent-purple: #8b5cf6;
+      --text-muted: #9ca3af;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: #f9fafb;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Glows */
+    .glow-sphere {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Glassmorphism Cards */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Gradient Typography */
+    .gradient-text {
+      background: linear-gradient(135deg, #a5b4fc 0%, #06b6d4 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Form Controls */
+    .form-control-dark {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-radius: 8px;
+    }
+    .form-control-dark:focus {
+      background: rgba(15, 23, 42, 1);
+      color: #fff;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+    }
+
+    .error-msg {
+      color: #f87171;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    /* Canvas Globe Container */
+    #globe-container {
+      width: 100%;
+      height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    canvas {
+      width: 320px !important;
+      height: 320px !important;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-sphere"></div>
+
+  <!-- Navigation Header -->
+  <nav class="navbar navbar-expand-lg border-bottom border-secondary border-opacity-25 py-3 relative-z">
+    <div class="container">
+      <a class="navbar-brand text-white fw-bold tracking-wide" href="#">
+        OPTIMUS<span class="text-info">//</span>PASS
+      </a>
+      <span class="badge bg-dark border border-secondary text-info font-monospace">V1.0 LIVE</span>
+    </div>
+  </nav>
+
+  <!-- Main Grid Section -->
+  <div class="container my-5 position-relative" style="z-index: 1;">
+    <div class="row align-items-center g-5">
+      
+      <!-- Left Column: Interactive 3D Globe & Intro -->
+      <div class="col-lg-6 text-center text-lg-start">
+        <h1 class="display-4 fw-extrabold gradient-text mb-3">
+          Deploy Your Global Event Access Code.
+        </h1>
+        <p class="text-secondary lead mb-4">
+          Automated identity registration, real-time ticket allocation, and encrypted pass key generation.
+        </p>
+
+        <!-- 3D Moving Canvas Globe -->
+        <div id="globe-container">
+          <canvas id="cobe-globe"></canvas>
+        </div>
+      </div>
+
+      <!-- Right Column: Glassmorphism Booking Form -->
+      <div class="col-lg-6">
+        <div class="glass-card p-4 p-md-5">
+          <h3 class="fw-bold mb-1">Generate Event Pass</h3>
+          <p class="text-secondary small mb-4">Complete validation checks to issue pass credentials.</p>
+
+          <form id="passForm" novalidate>
+            <!-- Name Input -->
+            <div class="mb-3">
+              <label class="form-label small text-uppercase text-secondary">Full Name</label>
+              <input type="text" id="fullName" class="form-control form-control-dark" placeholder="e.g. Jay Kale">
+              <div id="nameErr" class="error-msg">Alphabetical characters only (min 3 chars).</div>
+            </div>
+
+            <!-- Email Input -->
+            <div class="mb-3">
+              <label class="form-label small text-uppercase text-secondary">Email Address</label>
+              <input type="email" id="email" class="form-control form-control-dark" placeholder="jay@example.com">
+              <div id="emailErr" class="error-msg">Enter a valid email syntax.</div>
+            </div>
+
+            <!-- Phone Input -->
+            <div class="mb-3">
+              <label class="form-label small text-uppercase text-secondary">Mobile Number</label>
+              <input type="text" id="phone" class="form-control form-control-dark" placeholder="10-Digit Mobile" maxlength="10">
+              <div id="phoneErr" class="error-msg">Must be exactly 10 digits.</div>
+            </div>
+
+            <!-- Ticket Quantity -->
+            <div class="mb-4">
+              <label class="form-label small text-uppercase text-secondary">Pass Count</label>
+              <input type="number" id="seats" class="form-control form-control-dark" value="1" min="1" max="5">
+              <div id="seatErr" class="error-msg">Permitted allocation range: 1 to 5.</div>
+            </div>
+
+            <button type="submit" class="btn btn-info w-100 fw-bold py-2 shadow-sm">
+              VERIFY & GENERATE PASS
+            </button>
+          </form>
+
+          <!-- Output Banner -->
+          <div id="passOutput" class="alert alert-success mt-4 bg-dark border-info text-info d-none font-monospace small">
+            [STATUS: VERIFIED] Pass Key Generated Successfully!
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Cobe 3D Globe Library -->
+  <script type="module">
+    import createGlobe from 'https://cdn.skypack.dev/cobe';
+
+    let phi = 0;
+    const canvas = document.getElementById("cobe-globe");
+
+    const globe = createGlobe(canvas, {
+      devicePixelRatio: 2,
+      width: 320 * 2,
+      height: 320 * 2,
+      phi: 0,
+      theta: 0,
+      dark: 1,
+      diffuse: 1.2,
+      mapSamples: 12000,
+      mapBrightness: 6,
+      baseColor: [0.1, 0.1, 0.2],
+      markerColor: [0.02, 0.71, 0.83],
+      glowColor: [0.2, 0.1, 0.4],
+      markers: [
+        { location: [18.5204, 73.8567], size: 0.08 }, // Pune Node Marker
+      ],
+      onRender: (state) => {
+        state.phi = phi;
+        phi += 0.005; // Globe Rotation Speed
+      },
+    });
+  </script>
+
+  <!-- Form Validation Script -->
+  <script>
+    document.getElementById('passForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      let valid = true;
+
+      const name = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const seats = document.getElementById('seats').value;
+
+      // Validation logic
+      if (!/^[a-zA-Z\s]{3,}$/.test(name)) {
+        document.getElementById('nameErr').style.display = 'block'; valid = false;
+      } else { document.getElementById('nameErr').style.display = 'none'; }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('emailErr').style.display = 'block'; valid = false;
+      } else { document.getElementById('emailErr').style.display = 'none'; }
+
+      if (!/^[0-9]{10}$/.test(phone)) {
+        document.getElementById('phoneErr').style.display = 'block'; valid = false;
+      } else { document.getElementById('phoneErr').style.display = 'none'; }
+
+      if (seats < 1 || seats > 5) {
+        document.getElementById('seatErr').style.display = 'block'; valid = false;
+      } else { document.getElementById('seatErr').style.display = 'none'; }
+
+      if (valid) {
+        document.getElementById('passOutput').classList.remove('d-none');
+      }
+    });
+  </script>
+</body>
+</html>
